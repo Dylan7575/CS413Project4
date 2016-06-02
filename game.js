@@ -70,14 +70,20 @@ PIXI.loader
     .add('map_json','map.json')
     .add('tileset','tileset.png')
     .add("knight.json")
+    .add("myfont.fnt")
     .load(ready);
 var frames = [];
 
 var start;
 function ready() {
+    var title = new PIXI.extras.BitmapText("Hero's Adventure",{font:"32px myfont"});
 
+    title.position.x=250;
+    title.position.y=100;
+    stage.addChild(title);
     var tu = new TileUtilities(PIXI);
     world = tu.makeTiledWorld("map_json", "tileset.png");
+    world.visible=0;
     stage.addChild(world);
     for (i=1;i<=6;i++){
         frames.push(PIXI.Texture.fromFrame("runner"+i+".png"));
