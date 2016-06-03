@@ -64,7 +64,10 @@ var menu = StateMachine.create({
         onShooting:function(){shooterMcGavin();}
     }
 });
-/******************************************************Ending State Machine*****************/
+
+
+/**********************************************Functions for moving character and shooting tongue*****************/
+
 function moveLeft(){
     if (!knight) return;
     if(knight.position.x-32>16) {
@@ -131,13 +134,13 @@ var moveSound;
 var shootSound;
 var hitSound;
 var titlescreen = new PIXI.Container();
-var endScreen = new PIXI.Container();
 endScreen.visible=0;
 var timer;
 var gameRestart;
 var endText;
 
 function ready() {
+    /********************************Creating Title Screen**********************************************************/
     var title = new PIXI.extras.BitmapText("World Champion Eater",{font:"32px myfont"});
     title.position.x=10;
     title.position.y=100;
@@ -159,17 +162,13 @@ function ready() {
 
 
 
-
-
-
-
-
+    /******************************Creating Sounds*********************************************************************/
     moveSound =PIXI.audioManager.getAudio("move.mp3");
     shootSound = PIXI.audioManager.getAudio("shoottongue.mp3");
     hitSound = PIXI.audioManager.getAudio("food.mp3");
 
 
-
+    /*******************Creating World and pushing animation to array for movie clip***********************************/
     var tu = new TileUtilities(PIXI);
     world = tu.makeTiledWorld("map_json", "tileset.png");
     world.visible=0;
@@ -179,6 +178,8 @@ function ready() {
         frames.push(PIXI.Texture.fromFrame("fatman"+i+".png"));
     }
 
+
+    /********************************************Creting food items to be 'shot 'at *********************************/
     var temp_texture=new PIXI.Texture.fromImage("burger.png");
     var temp_texture2=new PIXI.Texture.fromImage("shake.png");
     var temp_texture3=new PIXI.Texture.fromImage("pizza.png");
@@ -189,7 +190,7 @@ function ready() {
     starts4.length=0;
     for(i=0;i<31;i++) {
         burgers = new PIXI.Sprite(temp_texture);
-        burgers.position.x = getRandomInt(0, 290);
+        burgers.position.x = getRandomInt(17, 290);
         burgers.position.y = getRandomInt(10, 200);
         starts.push(burgers);
     }
@@ -212,6 +213,8 @@ function ready() {
         starts4.push(burgers);
     }
 
+
+/**************************************Creating controllable character************************************************/
     knight = new PIXI.extras.MovieClip(frames);
     knight.anchor.x = 0.5;
     knight.anchor.y = 0.57;
@@ -220,7 +223,8 @@ function ready() {
     knight.animationSpeed=.1;
 
 
-
+/**************************Creating End Screen********************************************************************/
+/**************************Creating End Screen********************************************************************/
     endText = new PIXI.extras.BitmapText("Times Up!",{font:"32px myfont"});
     endText.position.x=stage.x+100;
     endText.position.y=100;
@@ -241,6 +245,8 @@ function ready() {
     stage.addChild(endScreen);
 
 
+
+/************************************Creating Tongue to be shot at food*******************************************/
     var m= new PIXI.Texture.fromImage("tongue.png");
     mouth = new PIXI.Sprite(m);
     mouth.anchor.x=.5;
@@ -252,7 +258,7 @@ function ready() {
 
 
 
-
+/**********************Adding Items to the World******************************************************************/
     var entity_layer= world.getObject("Entities");
     entity_layer.addChild(knight);
     for(j=0;j<31;j++){
@@ -264,13 +270,12 @@ function ready() {
     }
     entity_layer.addChild(mouth);
 
-
-
-
-
-
 }
-/********************************************************************************************/
+/*********************End of Ready Function****************************************************************/
+
+
+/*************************Adding Key Listeners**********************************************************/
+
 document.addEventListener("keyup",function (e){
     menu.Nothing();
 });
@@ -291,7 +296,7 @@ document.addEventListener("keydown",function (e) {
 });
 
 
-/*******************************************Ending Preloader and function*****************/
+/****************************Animation and collistion Detection************************************************/
 function animate(timestamp) {
     requestAnimationFrame(animate);
     update_camera();
@@ -342,7 +347,7 @@ function animate(timestamp) {
     renderer.render(stage);
 }
 
-
+/********************************Updating Camera*********************************************************/
 function update_camera() {
     stage.x = -knight.x*GAME_SCALE + GAME_WIDTH/2 - knight.width/2*GAME_SCALE;
     stage.y = -knight.y*GAME_SCALE + GAME_HEIGHT/2 + knight.height/2*GAME_SCALE;
